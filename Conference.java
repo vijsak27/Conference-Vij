@@ -29,10 +29,21 @@ public class Conference(){
 
     }
 
-    public void organize(){
+    public Attendee[][] organize(){
         int len = attendeeArray.length;
         for (int i =0; i<len;i++){
-
+            boolean alrHasCompany = false;
+            for(int n = 0; i<nTables; n++){
+                for (int a = 0; a<ppl_per_table; a++){
+                    if((tables[n][a])==(attendeeArray[i].getCompany())){
+                        alrHasCompany = True;
+                    }
+                    else if(tables=[n][a])){//need to check if the spot is empy before assinging the spot
+                        tables[n][a]=attendeeArray[i].get;
+                    }
+                }
+            }
         }
+        return tables[][]
     }
 }
