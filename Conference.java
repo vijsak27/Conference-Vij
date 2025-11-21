@@ -14,7 +14,7 @@ public class Conference{
     }
     
     public void readFile() throws IOException{
-        File f1 = new File("confGuests.txt");
+        try{File f1 = new File("confGuests.txt");//fix this with try catch
         Scanner reader = new Scanner(f1);
         int i =0;
         while (reader.hasNextLine()){
@@ -60,7 +60,7 @@ public class Conference{
             }
             
         }
-        return tables[][];
+        return tables;
     }
 
 
