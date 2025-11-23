@@ -13,7 +13,7 @@ public class Conference{
         tables = new Attendee[nTables][ppl_per_table];
     }
     
-    public void readFile() throws IOException{
+    public void readFile(){
         File f1 = new File("confGuests.txt");
         try(Scanner reader = new Scanner(f1)){//fix this with try catch
         
@@ -36,7 +36,7 @@ public class Conference{
     
     public void addManually(){
         if (attendeeArray.length>100){// dont add more than 100 to the conference
-            System.out.println("Max Occupany Reached\n";)
+            System.out.println("Max Occupany Reached\n");
         }
         else{
             Scanner scan = new Scanner(System.in);// for input from user
@@ -92,11 +92,13 @@ public class Conference{
 
 
     public String toString(){
+        String result  = ""
         for(int i = 0; i<nTables; i++){
             for (int n = 0; n<nTables;n++){
-                System.out.println(tables[i][n]);
+                result += tables[i][n];
             }
-            System.out.println("\n");
+            result += "\n";
         }
+        return result;
     }
 }
