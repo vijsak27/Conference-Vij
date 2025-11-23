@@ -5,6 +5,6 @@ public class Main{
         c1.emptyFill();
         c1.readFile();
         c1.organize();
-        c1.toString();
+        System.out.println(c1);
     }
 }

@@ -24,7 +24,8 @@ public class Conference{
             String firName = split[2];
             String lasName = split[1];
             int company = Integer.parseInt(split[3]);
-            Attendee a = attendeeArray[i];
+            Attendee a = new Attendee(firName,lasName,company);
+            attendeeArray[i]=a;
             i++;
         }
 
@@ -65,11 +66,15 @@ public class Conference{
     public Attendee[][] organize(){
         int len = attendeeArray.length;
         for (int i =0; i<len;i++){
-            boolean alrHasCompany = false;
-            for(int n = 0; i<nTables; n++){
+            boolean seated = false;
+            for(int n = 0; n<nTables; n++){
+                boolean alrHasCompany = false;
                 for (int a = 0; a<ppl_per_table; a++){
-                    if((tables[n][a].getCompany())==(attendeeArray[i].getCompany())){
+                    if((tables[n][a].getCompany())==((attendeeArray[i]).getCompany())){
                         alrHasCompany = true;
+                        seated = true;
+                        break; // https://www.w3schools.com/java/java_break.asp
+
                     }
 
                 }
@@ -92,7 +97,7 @@ public class Conference{
 
 
     public String toString(){
-        String result  = ""
+        String result  = "";
         for(int i = 0; i<nTables; i++){
             for (int n = 0; n<nTables;n++){
                 result += tables[i][n];
