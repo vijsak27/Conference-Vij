@@ -14,8 +14,9 @@ public class Conference{
     }
     
     public void readFile() throws IOException{
-        try{File f1 = new File("confGuests.txt");//fix this with try catch
-        Scanner reader = new Scanner(f1);
+        File f1 = new File("confGuests.txt");
+        try(Scanner reader = new Scanner(f1)){//fix this with try catch
+        
         int i =0;
         while (reader.hasNextLine()){
             String line = reader.nextLine();
@@ -27,6 +28,10 @@ public class Conference{
             i++;
         }
 
+        } catch (FileNotFoundException e){
+            System.out.println("Error");
+            e.printStackTrace();
+        }
     }
     
     public void addManually(){
