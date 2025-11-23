@@ -4,6 +4,8 @@ public class Main{
     public static void main (String[] args){
         Conference c1 = new Conference(10,10);
         Scanner s = new Scanner(System.in);
+        c1.emptyFill();
+        c1.readFile();
         boolean addMore = true;
         do{
             System.out.println("Would you like to add any attendees? (y/n)");
@@ -19,8 +21,6 @@ public class Main{
                 addMore=false;
             }
         }while(addMore);
-        c1.emptyFill();
-        c1.readFile();
         c1.organize();
         System.out.println(c1);
     }
