@@ -115,7 +115,7 @@ public class Conference{
         String result  = "";
         for(int i = 0; i<nTables; i++){
             for (int n = 0; n<nTables;n++){
-                result += tables[i][n];
+                result += (tables[i][n]).getCompany() + " ";
             }
             result += "\n";
         }
