@@ -35,11 +35,21 @@ public class Conference{
         }
     }
     
-    public void addManually(){
-        if (attendeeArray.length>100){// dont add more than 100 to the conference
+    public boolean addManually(){
+        int length = attendeeArray.length;
+        int attendeeCount=0;
+        for(int i = 0; i<length; i++){
+            if (attendeeArray[i]!=null){
+                attendeeCount++;
+                
+            }
+        }
+        if (attendeeCount>100){// dont add more than 100 to the conference
             System.out.println("Max Occupany Reached\n");
+            return false;
         }
         else{
+            System.out.println("Number of Attendees: "+attendeeCount);
             Scanner scan = new Scanner(System.in);// for input from user
             System.out.println("First name of attendee: ");
             String fName = scan.nextLine();//get first name
@@ -51,9 +61,11 @@ public class Conference{
             for(int i = 0 ; i<attendeeArray.length; i++){//loop through attendeeArray
                 if(attendeeArray[i]==null){//find empty spot
                     attendeeArray[i] = a1;//fill it with attendee
+                    break;
                 }
             }
         }
+        return true;
     }
     
     public void emptyFill(){
