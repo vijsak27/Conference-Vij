@@ -28,10 +28,32 @@ public class Conference{
         }
 
     }
+    
+    public void addManually(){
+        if (attendeeArray.length>100){// dont add more than 100 to the conference
+            System.out.println("Max Occupany Reached\n";)
+        }
+        else{
+            Scanner scan = new Scanner(System.in);// for input from user
+            System.out.println("First name of attendee: ");
+            String fName = scan.nextLine();//get first name
+            System.out.println("Last name of attendee: ");
+            String lName = scan.nextLine();//get last name
+            System.out.println("Company number of attendee: ");
+            int compNum = Integer.parseInt(scan.nextLine());//parse the users input for a company number int
+            Attendee a1 = new Attendee(fName, lName, compNum);//make attendee
+            for(int i = 0 ; i<attendeeArray.length; i++){//loop through attendeeArray
+                if(attendeeArray[i]==null){//find empty spot
+                    attendeeArray[i] = a1;//fill it with attendee
+                }
+            }
+        }
+    }
+    
     public void emptyFill(){
         for(int i = 0; i<nTables; i++){
             for (int n = 0; n<ppl_per_table; n++){
-                tables[i][n]= new Attendee("empty","empty", -1);
+                tables[i][n]= new Attendee("empty","empty", -1);//fill with default empty values
             }
         }
     }
