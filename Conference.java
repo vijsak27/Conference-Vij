@@ -65,33 +65,48 @@ public class Conference{
     }
     public Attendee[][] organize(){
         int len = attendeeArray.length;
+
+       
+
         for (int i =0; i<len;i++){
+            if (attendeeArray[i]==null){
+                continue; //https://www.w3schools.com/java/java_break.asp
+            }
             boolean seated = false;
+
             for(int n = 0; n<nTables; n++){
                 boolean alrHasCompany = false;
                 for (int a = 0; a<ppl_per_table; a++){
                     if((tables[n][a].getCompany())==((attendeeArray[i]).getCompany())){
                         alrHasCompany = true;
-                        seated = true;
-                        break; // https://www.w3schools.com/java/java_break.asp
+                
 
                     }
+                    
 
                 }
-                for (int r = 0; r<nTables; r++){
-                    for (int c = 0; c<ppl_per_table; c++){
-                        if(!alrHasCompany){
-                            if(tables[r][c].getCompany()==-1){
-                                tables[r][c]=attendeeArray[i];
-                            }
+                
+                for (int c = 0; c<ppl_per_table; c++){
+                    if(!alrHasCompany){
+                    if(tables[n][c].getCompany()==-1){
+                            tables[n][c]=attendeeArray[i];
+                            seated = true;
+                            break; // https://www.w3schools.com/java/java_break.asp
+                        }
                                
                     }
-                    }
+
                 }
+                if (seated){
+                    break;
+                }
+                
                 
             }
             
-        }
+        
+        
+    }
         return tables;
     }
 
