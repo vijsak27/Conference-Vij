@@ -31,10 +31,10 @@ public class Conference{
         int i =0;
         while (reader.hasNextLine()){
             String line = reader.nextLine();
-            String[] split = line.split(",");//split string at commas to get individual datapoints
-            String firName = split[2];
-            String lasName = split[1];
-            int company = Integer.parseInt(split[3]);//need to use parseInt() to parse the string and find the company number
+            String[] split = line.split(",");//split string into an array at commas to get individual datapoints
+            String firName = split[2];//access the first name by looking at index 2 (based on confGuests.txt order)
+            String lasName = split[1];//access the last name by looking at index 1 (based on confGuests.txt order)
+            int company = Integer.parseInt(split[3]);//access company number at index 3 (based on confGuests.txt order) + need to use parseInt() to parse the string and find the company number
             Attendee a = new Attendee(firName,lasName,company);//make attendee object
             attendeeArray[i]=a;//add to list
             i++;
