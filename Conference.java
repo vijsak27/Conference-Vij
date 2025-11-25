@@ -35,7 +35,8 @@ public class Conference{
             String firName = split[2];//access the first name by looking at index 2 (based on confGuests.txt order)
             String lasName = split[1];//access the last name by looking at index 1 (based on confGuests.txt order)
             int company = Integer.parseInt(split[3]);//access company number at index 3 (based on confGuests.txt order) + need to use parseInt() to parse the string and find the company number
-            Attendee a = new Attendee(firName,lasName,company);//make attendee object
+            int id = Integer.parseInt(split[0]);
+            Attendee a = new Attendee(firName,lasName,company, id);//make attendee object
             attendeeArray[i]=a;//add to list
             i++;
         }
@@ -77,7 +78,8 @@ public class Conference{
             String lName = scan.nextLine();//get last name
             System.out.println("Company number of attendee: ");
             int compNum = Integer.parseInt(scan.nextLine());//parse the users input for a company number int
-            Attendee a1 = new Attendee(fName, lName, compNum);//make attendee
+			int id = attendeeCount+1;
+            Attendee a1 = new Attendee(fName, lName, compNum, id);//make attendee
             for(int i = 0 ; i<attendeeArray.length; i++){//loop through attendeeArray
                 if(attendeeArray[i]==null){//find empty spot
                     attendeeArray[i] = a1;//fill it with attendee
@@ -94,7 +96,7 @@ public class Conference{
     public void emptyFill(){
         for(int i = 0; i<nTables; i++){//loop through tables array
             for (int n = 0; n<ppl_per_table; n++){
-                tables[i][n]= new Attendee("empty","empty", -1);//fill with default empty values
+                tables[i][n]= new Attendee("empty","empty", -1,-1);//fill with default empty values
             }
         }
     }
@@ -116,35 +118,23 @@ public class Conference{
                 boolean alrHasCompany = false;//assume each table does not have the company of the current attendee already there
                 for (int a = 0; a<ppl_per_table; a++){//loop through the current table
                     if((tables[n][a].getCompany())==((attendeeArray[i]).getCompany())){//check if the company is alreayd there
-                        alrHasCompany = true;//if the company is already there set alrHasCompany to true
-                
-
+                        alrHasCompany = true;//if the company is already there set alrHasCompany to true                
                     }
-                    
-
-                }
-                
+                }                
                 for (int c = 0; c<ppl_per_table; c++){// loop through the table
                     if(!alrHasCompany){//if the table doesn't already have the company
                         if(tables[n][c].getCompany()==-1){// and if the seat is empty
                             tables[n][c]=attendeeArray[i];//place attendee in that seat
                             seated = true;//make seated true 
                             break; // break out of the loop so it doesnt keep on placing the same attendee - reference: https://www.w3schools.com/java/java_break.asp
-                        }
-                               
+                        }                               
                     }
-
                 }
                 if (seated){//if seated stop trying to loop through the tables and organzie that same attendee
                     break;
-                }
-                
-                
+                }                
             }
-            
-        
-        
-    }
+		}	
         return tables;
     }
 
@@ -157,7 +147,7 @@ public class Conference{
         String result  = "";
         for(int i = 0; i<nTables; i++){//loop through the tables array
             for (int n = 0; n<nTables;n++){
-                result += (tables[i][n]).getCompany() + " ";//use getCompany() on each item in the tables array
+                result += (tables[i][n]).getID() + " ";//use getCompany() on each item in the tables array
             }
             result += "\n";//spacing
         }
