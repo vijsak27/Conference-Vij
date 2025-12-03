@@ -6,7 +6,7 @@ public class Conference{
     private int ppl_per_table;
     private Attendee attendeeArray[];
     private Attendee[][] tables;
-    private boolean organized = false;
+    
     
     /* take in the number of people per table and the number of tables into the Conference object
     Also define the attendeeArray with the now given numTable and pplPer Table (include 1.5x multiplier to add all resgistered guests
