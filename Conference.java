@@ -6,6 +6,7 @@ public class Conference{
     private int ppl_per_table;
     private Attendee attendeeArray[];
     private Attendee[][] tables;
+    private boolean organized = false;
     
     /* take in the number of people per table and the number of tables into the Conference object
     Also define the attendeeArray with the now given numTable and pplPer Table (include 1.5x multiplier to add all resgistered guests
@@ -102,6 +103,24 @@ public class Conference{
         }
     }
 
+
+    
+    public void printTables(){
+		for (int i = 0 ; i <nTables; i++){
+			System.out.println("Table " + (i+1)+":\n");
+			for(int n = 0 ; n<ppl_per_table; n++){
+				if ((tables[i][n].getName()).equals("emptyempty")){
+					System.out.println("----\n");
+				}
+				else{
+					System.out.println(tables[i][n].getName());
+				}
+				
+			}
+		
+		}
+		}
+		
     /*
     organize the tables array with the attendees. First check if a table already has the company of the attendee
     if alrHasCompany is false, seat the attendee at the next available seat
@@ -160,17 +179,20 @@ public class Conference{
 		
 		int input = 1;
 		do {
-			System.out.println("Menu:\n1. Add Attendee Manually\n2.Organize seats");
+			System.out.println("Menu:\n1. Add Attendee Manually\n2. Organize seats\n3. Seating by Table");
 			input = Integer.parseInt(s1.nextLine());
 			if (input ==1){
+				
 				addManually();//run add manually if the user wants to add an attendee.
 			}
-			else{
+			else if (input ==2){
 				organize();
 				System.out.println(this.toString());
-				input =2;
 			}
-		} while (input ==1);			
+			else if (input ==3){
+				printTables();
+			}
+		} while ((input ==1)||(input ==2)||(input ==3));			
 		
 	}
 }
