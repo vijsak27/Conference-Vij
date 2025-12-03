@@ -12,7 +12,7 @@ public class Main{
         c1.emptyFill();//fill tables empty attendees
         c1.readFile();// read in the file
         boolean addMore = true;//starts off as true so thaty user is prompted to add attendees
-        System.out.println("Menu:\n1. Organize seats\n2.Add Attendee Manually");
+        
         
 			do{
 				System.out.println("Would you like to add any attendees? (y/n)");

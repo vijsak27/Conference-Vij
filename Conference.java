@@ -79,6 +79,7 @@ public class Conference{
             System.out.println("Company number of attendee: ");
             int compNum = Integer.parseInt(scan.nextLine());//parse the users input for a company number int
 			int id = attendeeCount+1;
+			System.out.println("\nAttendee added!\nName: "+ fName+" "+lName+ ", Id: "+id +"\n");
             Attendee a1 = new Attendee(fName, lName, compNum, id);//make attendee
             for(int i = 0 ; i<attendeeArray.length; i++){//loop through attendeeArray
                 if(attendeeArray[i]==null){//find empty spot
@@ -153,4 +154,26 @@ public class Conference{
         }
         return result;//return array of company numbers
     }
+    
+    public void Menu(){
+		Scanner s1 = new Scanner(System.in);
+		System.out.println("Menu:\n1. Organize seats\n2.Add Attendee Manually");
+		int input = Integer.parseInt(s1.nextLine());
+		if (input == 1){
+			System.out.println("Would you like to add any attendees? (y/n)");
+				if((s.nextLine().equals("y"))){
+					boolean added = c1.addManually();//run add manually if the user wants to add an attendee. save whether it was added to a boolean
+
+					if (!added){//if not added
+						addMore=false;// stop to loop by making addMore = false because mas occupancy has been reached
+					}
+					addMore = true;// else addMore = true so keep going
+					
+				}
+				else{
+					addMore=false;// if users enteres anything other than "y" stop the loop
+				}
+			
+			}
+	}
 }
