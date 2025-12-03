@@ -11,8 +11,9 @@ public class Main{
         Scanner s = new Scanner(System.in);// scanner for user input
         c1.emptyFill();//fill tables empty attendees
         c1.readFile();// read in the file
-        boolean addMore = true;//starts off as true so thaty user is prompted to add attendees
-        
+        c1.menu();
+        //boolean addMore = true;//starts off as true so thaty user is prompted to add attendees
+        /*
         
 			do{
 				System.out.println("Would you like to add any attendees? (y/n)");
@@ -29,7 +30,8 @@ public class Main{
 					addMore=false;// if users enteres anything other than "y" stop the loop
 				}
 			}while(addMore);
-        c1.organize();//organize the tables
-        System.out.println(c1);//print tables
+			*/
+        //c1.organize();//organize the tables
+        //System.out.println(c1);//print tables
     }
 }
