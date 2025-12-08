@@ -253,7 +253,10 @@ public class Conference{
 			else if (input ==3){
 				printTables();
 			}
-		} while ((input ==1)||(input ==2)||(input ==3));			
+			else if (input ==4){
+			companyRosters();
+			}
+		} while ((input ==1)||(input ==2)||(input ==3)||(input==4));			
 		
 	}
 }
