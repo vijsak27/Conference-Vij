@@ -6,7 +6,9 @@ public class Conference{
     private int ppl_per_table;
     private Attendee attendeeArray[];
     private Attendee[][] tables;
-    
+    private Boolean organized = false;
+    private String[] companyNames= new String [16];
+    private int[] companyNumbers = new int[16];
     
     /* take in the number of people per table and the number of tables into the Conference object
     Also define the attendeeArray with the now given numTable and pplPer Table (include 1.5x multiplier to add all resgistered guests
@@ -25,6 +27,7 @@ public class Conference{
     go throuhg the file and split each line and create a new attenddee object from each line
     add each attendee object to the attendeeArray
     */
+   
     public void readFile(){
         File f1 = new File("confGuests.txt");
         try(Scanner reader = new Scanner(f1)){//try catch set up
@@ -48,6 +51,32 @@ public class Conference{
         }
     }
     
+    public void readCompanies(){
+        File f1 = new File("companies.txt");
+        try(Scanner reader = new Scanner(f1)){//try catch set up
+        
+        int i =0;
+        while (reader.hasNextLine()){
+            String line = reader.nextLine();
+			if ((line.split(",")).length<2){
+				continue;
+			}
+			
+            String[] split = line.split(",");//split string into an array at commas to get individual datapoints
+            String companyName = split[1];//access the company name by looking at index 1 (based on companies.txt order)
+            int companyNumber = Integer.parseInt(split[0]);//access the company number by looking at index 0 (based on companies.txt order)
+            companyNames[i]=companyName;//add to company name list
+            companyNumbers[i]=companyNumber;// add to company numbers list
+            
+            i++;
+            
+        }
+
+        } catch (FileNotFoundException e){//if error, show error
+            System.out.println("Error");
+            e.printStackTrace();
+        }
+    }
 
     /*
     this function allows the user to manually add any addtional guests to the registration list
@@ -174,19 +203,51 @@ public class Conference{
         return result;//return array of company numbers
     }
     
+    public void companyRosters(){
+		Scanner s1 = new Scanner(System.in);
+		System.out.println("Please accurately type the company you are looking for\n and capitalize the first letter of each word: ");
+		String target = s1.nextLine();
+		int length = companyNames.length;
+		int targetIndex = 0;
+		boolean found = false;
+		for (int i =0; i<length; i++){
+				if (companyNames[i].equals(target)){
+					found = true;
+					targetIndex = i;
+					break;
+				}
+			}
+		if (found){
+			for (int r =0 ; r<nTables; r++){
+				for (int c = 0; c<ppl_per_table; c++){
+					if(tables[r][c].getCompany()==companyNumbers[targetIndex]){
+							System.out.println("\nName: "+ tables[r][c].getName() + "\nTable: "+ r + "\nSeat: "+ c);
+					}
+				}
+			}
+		}
+		else{
+			System.out.println("Company does not exists.\n");
+		}
+		}
+    
     public void menu(){
 		Scanner s1 = new Scanner(System.in);
 		
 		int input = 1;
 		do {
-			System.out.println("Menu:\n1. Add Attendee Manually\n2. Organize seats\n3. Seating by Table");
+			System.out.println("Menu:\n1. Add Attendee Manually\n2. Organize seats\n3. Seating by Table\n4. Print Specific Company Roster");
 			input = Integer.parseInt(s1.nextLine());
 			if (input ==1){
 				
 				addManually();//run add manually if the user wants to add an attendee.
 			}
-			else if (input ==2){
+			else if (organized ==false &&input ==2){
 				organize();
+				organized = true;
+				System.out.println(this.toString());
+			}
+			else if(organized ==true &&input ==2){
 				System.out.println(this.toString());
 			}
 			else if (input ==3){

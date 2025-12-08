@@ -11,6 +11,7 @@ public class Main{
         Scanner s = new Scanner(System.in);// scanner for user input
         c1.emptyFill();//fill tables empty attendees
         c1.readFile();// read in the file
+        c1.readCompanies();
         c1.menu();
         //boolean addMore = true;//starts off as true so thaty user is prompted to add attendees
         /*
