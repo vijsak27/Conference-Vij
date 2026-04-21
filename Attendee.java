@@ -12,7 +12,7 @@ public class Attendee{
     private int company;
     private int id;
 	public Attendee (String first_name, String last_name, int company_number, int ID){//contructor
-        name = first_name+last_name;//assign name
+        name = first_name+" "+last_name;//assign name
         company = company_number;// and company number
         id = ID;
     }

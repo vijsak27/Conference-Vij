@@ -17,8 +17,10 @@ public class Main{
         
         /*c1.emptyFill();//fill tables empty attendees
         c1.readFile();// read in the file
-        boolean addMore = true;//starts off as true so thaty user is prompted to add attendees
-        System.out.println("Menu:\n1. Organize seats\n2.Add Attendee Manually");
+        c1.readCompanies();
+        c1.menu();
+        //boolean addMore = true;//starts off as true so thaty user is prompted to add attendees
+        /*
         
 			do{
 				System.out.println("Would you like to add any attendees? (y/n)");
@@ -35,8 +37,14 @@ public class Main{
 					addMore=false;// if users enteres anything other than "y" stop the loop
 				}
 			}while(addMore);
+<<<<<<< HEAD
         c1.organize();//organize the tables
         System.out.println(c1);//print tables
         */
+=======
+			*/
+        //c1.organize();//organize the tables
+        //System.out.println(c1);//print tables
+>>>>>>> de2f3a5a64bbbac18f9eacb8d3197d44df0ec588
     }
 }
