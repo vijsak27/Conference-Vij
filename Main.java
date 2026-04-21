@@ -9,7 +9,13 @@ public class Main{
     public static void main (String[] args){
         Conference c1 = new Conference(10,10);//define new conference
         Scanner s = new Scanner(System.in);// scanner for user input
-        c1.emptyFill();//fill tables empty attendees
+        c1.menu();
+        
+        
+        
+        
+        
+        /*c1.emptyFill();//fill tables empty attendees
         c1.readFile();// read in the file
         boolean addMore = true;//starts off as true so thaty user is prompted to add attendees
         System.out.println("Menu:\n1. Organize seats\n2.Add Attendee Manually");
@@ -31,5 +37,6 @@ public class Main{
 			}while(addMore);
         c1.organize();//organize the tables
         System.out.println(c1);//print tables
+        */
     }
 }

@@ -145,12 +145,73 @@ public class Conference{
     */
     public String toString(){
         String result  = "";
-        for(int i = 0; i<nTables; i++){//loop through the tables array
-            for (int n = 0; n<nTables;n++){
+        for(int i = 0; i<ppl_per_table; i++){//loop through the tables array
+            for (int n = 0; n<ppl_per_table;n++){
                 result += (tables[i][n]).getID() + " ";//use getCompany() on each item in the tables array
             }
             result += "\n";//spacing
         }
         return result;//return array of company numbers
     }
+    
+    public void menu(){
+		boolean organized = false;
+		System.out.println("Welcome to Conference Planner");
+		System.out.println("------------------------------");
+		Scanner s2 = new Scanner(System.in);
+		while(!s2.nextLine().equals("q")){
+			System.out.println("\nOptions:");
+			if(!organized){
+				System.out.println("1. Organize Attendees");
+				System.out.println("2. Add Attendee Manually");
+				System.out.println("Enter 1, 2, or q (quit)");
+				String userInput = s2.nextLine();
+				if(userInput.equals("1")){
+					organize();
+					organized = true;
+				}
+				else if(userInput.equals("2")){
+					addManually();
+				}
+				else if(userInput.equals("q")){
+					break;
+				}
+				else{
+					System.out.println("Invalid Input\n");
+				}
+			}
+			else {
+				System.out.println("1. Print Tables");
+				System.out.println("2. Print Specific Table");
+				System.out.println("3. Print Company Rosters");
+				System.out.println("Enter 1, 2, 3, or q (quit)");
+				String userInput = s2.nextLine();
+				
+				if(userInput.equals("1")){
+					String result  = "";
+					for(int i = 0; i<ppl_per_table; i++){//loop through the tables array
+						for (int n = 0; n<ppl_per_table;n++){
+							result += (tables[i][n]).getID() + " ";//use getCompany() on each item in the tables array
+						}
+						result += "\nTable"+i;//spacing
+					}
+					System.out.println(result);
+				}
+				else if(userInput.equals("2")){
+					System.out.println("In Progress!");
+				}
+				else if(userInput.equals("3")){
+					System.out.println("In Progress!");
+				}
+				else if(userInput.equals("q")){
+					System.out.println("In Progress!");
+				}
+				else{
+					System.out.println("Invalid Input\n");
+				}
+			}
+		}
+	}
 }
+
+
