@@ -37,14 +37,12 @@ public class Main{
 					addMore=false;// if users enteres anything other than "y" stop the loop
 				}
 			}while(addMore);
-<<<<<<< HEAD
+
         c1.organize();//organize the tables
         System.out.println(c1);//print tables
         */
-=======
-			*/
+
         //c1.organize();//organize the tables
         //System.out.println(c1);//print tables
->>>>>>> de2f3a5a64bbbac18f9eacb8d3197d44df0ec588
     }
 }
