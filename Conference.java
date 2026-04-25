@@ -1,10 +1,11 @@
 //Conference.java
-import java.util.Scanner;
+import java.util.*;
 import java.io.*;
 public class Conference{
     private int nTables;
     private int ppl_per_table;
     private Attendee attendeeArray[];
+    private ArrayList<Company> companies = new ArrayList<Company>();
     private Attendee[][] tables;
     
     /* take in the number of people per table and the number of tables into the Conference object
@@ -26,6 +27,7 @@ public class Conference{
     */
     public void readFile(){
         File f1 = new File("confGuests.txt");
+        File f2 = new File("companies.txt");
         try(Scanner reader = new Scanner(f1)){//try catch set up
         
         int i =0;
@@ -45,8 +47,35 @@ public class Conference{
             System.out.println("Error");
             e.printStackTrace();
         }
+        
+        
+        try(Scanner reader1 = new Scanner(f2)){//try catch set up
+        
+        int i =0;
+        while (reader1.hasNextLine()){
+            String line = reader1.nextLine();
+            String[] split = line.split(",");//split string into an array at commas to get individual datapoints
+            String name = split[1];
+            int id = Integer.parseInt(split[0]);
+          
+            Company c = new Company(name,id);//make company object
+            companies.add(c);//add to list
+            i++;
+        }
+
+        } catch (FileNotFoundException e){//if error, show error
+            System.out.println("Error");
+            e.printStackTrace();
+        }
     }
     
+
+
+	public void printCompanies(){
+		int length = companies.size();
+		
+	
+	}
 
     /*
     this function allows the user to manually add any addtional guests to the registration list
@@ -65,7 +94,7 @@ public class Conference{
             }
         }
         int maxOccupancy =nTables*ppl_per_table;//calculated maxOccupancy based on number of total seats
-        if (attendeeCount>maxOccupancy){// dont add more than maxOccupancy
+        if (attendeeCount>=maxOccupancy){// dont add more than maxOccupancy
             System.out.println("Max Occupancy ("+maxOccupancy+") Reached\n");
             return false;//return that the attendee was not added - used in Main.java for loop logic
         }
@@ -138,6 +167,30 @@ public class Conference{
         return tables;
     }
 
+
+	public ArrayList<Attendee> howManyUnseated(){
+		int numAttendees = attendeeArray.length;
+		ArrayList<Attendee> unseatedAttendees = new ArrayList<Attendee>();
+		
+		for(int attendee = 0; attendee<numAttendees; attendee++){
+			boolean seated = false;
+			for(int table = 0; table<nTables; table++){
+				for(int seat = 0; seat<ppl_per_table; seat++){
+					if(tables[table][seat].getID()==(attendeeArray[attendee].getID())){
+						seated = true;
+					}
+				}
+			}
+			if(!seated){
+				unseatedAttendees.add(attendeeArray[attendee]);
+			}
+		}
+		
+		return unseatedAttendees;
+	}
+
+
+
     /*
     prints out the tables array
     currently the result string is accessing the company numbers of every attendee
@@ -145,9 +198,9 @@ public class Conference{
     */
     public String toString(){
         String result  = "";
-        for(int i = 0; i<ppl_per_table; i++){//loop through the tables array
+        for(int i = 0; i<nTables; i++){//loop through the tables array
             for (int n = 0; n<ppl_per_table;n++){
-                result += (tables[i][n]).getID() + " ";//use getCompany() on each item in the tables array
+                result += (tables[i][n]).getID() + " ";//use getID() on each item in the tables array
             }
             result += "\n";//spacing
         }
@@ -156,8 +209,9 @@ public class Conference{
     
     public void menu(){
 		boolean organized = false;
-		System.out.println("Welcome to Conference Planner");
+		System.out.println("Launching Conference Planner...");
 		System.out.println("------------------------------");
+		System.out.println("Enter 'q' to quit or press enter to continue");
 		Scanner s2 = new Scanner(System.in);
 		while(!s2.nextLine().equals("q")){
 			System.out.println("\nOptions:");
@@ -189,22 +243,32 @@ public class Conference{
 				
 				if(userInput.equals("1")){
 					String result  = "";
-					for(int i = 0; i<ppl_per_table; i++){//loop through the tables array
+					
+					for(int i = 0; i<nTables; i++){//loop through the tables array
+						result += "Table " + (i+1)+":";
 						for (int n = 0; n<ppl_per_table;n++){
+							
 							result += (tables[i][n]).getID() + " ";//use getCompany() on each item in the tables array
 						}
-						result += "\nTable"+i;//spacing
+						result += "\n";//spacing
 					}
+					
+					
+					result+="\nPress enter to continue";
 					System.out.println(result);
 				}
 				else if(userInput.equals("2")){
-					System.out.println("In Progress!");
+					int targetTable = -1;
+					
+					while(targetTable <0 || targetTable<16){
+						System.out.println("Which company's rosters would you like to print?");
+					}
 				}
 				else if(userInput.equals("3")){
 					System.out.println("In Progress!");
 				}
 				else if(userInput.equals("q")){
-					System.out.println("In Progress!");
+					break;
 				}
 				else{
 					System.out.println("Invalid Input\n");
