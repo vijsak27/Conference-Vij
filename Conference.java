@@ -6,6 +6,7 @@ public class Conference{
     private int ppl_per_table;
     private Attendee attendeeArray[];
     private ArrayList<Company> companies = new ArrayList<Company>();
+    private int numCompanies;
     private Attendee[][] tables;
     
     /* take in the number of people per table and the number of tables into the Conference object
@@ -15,8 +16,9 @@ public class Conference{
     public Conference(int pplPerTable, int numTables){//constructor
         ppl_per_table=pplPerTable;
         nTables = numTables;
-        attendeeArray = new Attendee[(int)((ppl_per_table*nTables)*1.5)];
+        attendeeArray = new Attendee[(int)((ppl_per_table*nTables)*1.5)];//multiplying by 1.5 as suggested by Mr. Twyford to account for extra attendees
         tables = new Attendee[nTables][ppl_per_table];
+        numCompanies = companies.size();
     }
     
 
@@ -72,9 +74,15 @@ public class Conference{
 
 
 	public void printCompanies(){
-		int length = companies.size();
 		
-	
+		System.out.println("Companies Attending Conference with IDs:");
+		int length = companies.size();
+		for(int i = 0; i<length; i++){
+			System.out.println(companies.get(i).getName()+", "+companies.get(i).getID());
+		}
+		
+		System.out.println("\n\n");
+		
 	}
 
     /*
@@ -85,6 +93,7 @@ public class Conference{
     next empty spot in attendeeArray[]
     */
     public boolean addManually(){
+		numCompanies = companies.size();
         int length = attendeeArray.length;
         int attendeeCount=0;
         for(int i = 0; i<length; i++){
@@ -99,14 +108,26 @@ public class Conference{
             return false;//return that the attendee was not added - used in Main.java for loop logic
         }
         else{
+			printCompanies(); //show the user what companies correspond with which ID
             System.out.println("Number of Attendees: "+attendeeCount);//show how many current attendees
             Scanner scan = new Scanner(System.in);// for input from user
             System.out.println("First name of attendee: ");
             String fName = scan.nextLine();//get first name
             System.out.println("Last name of attendee: ");
             String lName = scan.nextLine();//get last name
-            System.out.println("Company number of attendee: ");
-            int compNum = Integer.parseInt(scan.nextLine());//parse the users input for a company number int
+            int compNum = -1;
+            boolean compNumValid = false;
+            while(!compNumValid){
+				System.out.println("Company number of attendee (must be 1-16; see above): ");
+				compNum = Integer.parseInt(scan.nextLine());//parse the users input for a company number int
+				for(int i = 0; i < numCompanies; i++){
+					if(companies.get(i).getID()==compNum){
+						compNumValid = true;
+						break;
+					}
+				}
+			}
+			System.out.println("Press enter to continue");
 			int id = attendeeCount+1;
             Attendee a1 = new Attendee(fName, lName, compNum, id);//make attendee
             for(int i = 0 ; i<attendeeArray.length; i++){//loop through attendeeArray
@@ -115,6 +136,8 @@ public class Conference{
                     break;
                 }
             }
+            
+            
         }
         return true;
     }
@@ -146,15 +169,16 @@ public class Conference{
             for(int n = 0; n<nTables; n++){
                 boolean alrHasCompany = false;//assume each table does not have the company of the current attendee already there
                 for (int a = 0; a<ppl_per_table; a++){//loop through the current table
-                    if((tables[n][a].getCompany())==((attendeeArray[i]).getCompany())){//check if the company is alreayd there
+                    if((tables[n][a].getCompanyID())==((attendeeArray[i]).getCompanyID())){//check if the company is alreayd there
                         alrHasCompany = true;//if the company is already there set alrHasCompany to true                
                     }
                 }                
                 for (int c = 0; c<ppl_per_table; c++){// loop through the table
                     if(!alrHasCompany){//if the table doesn't already have the company
-                        if(tables[n][c].getCompany()==-1){// and if the seat is empty
+                        if(tables[n][c].getCompanyID()==-1){// and if the seat is empty
                             tables[n][c]=attendeeArray[i];//place attendee in that seat
                             seated = true;//make seated true 
+                            attendeeArray[i].setTable(n);
                             break; // break out of the loop so it doesnt keep on placing the same attendee - reference: https://www.w3schools.com/java/java_break.asp
                         }                               
                     }
@@ -189,7 +213,20 @@ public class Conference{
 		return unseatedAttendees;
 	}
 
-
+	public void assignAttendeeCompanyObjects(){
+		int length = attendeeArray.length;
+		for(int i = 0; i<length; i++){
+			if(attendeeArray[i]==null){
+					continue; //skip extra spaces in attendee array
+			}
+			for(int n = 0; n<companies.size(); n++){
+				if(attendeeArray[i].getCompanyID()==companies.get(n).getID()){
+					attendeeArray[i].setCompany(companies.get(n));
+					break;
+				}
+			}
+		}
+	}
 
     /*
     prints out the tables array
@@ -208,6 +245,7 @@ public class Conference{
     }
     
     public void menu(){
+		assignAttendeeCompanyObjects();
 		boolean organized = false;
 		System.out.println("Launching Conference Planner...");
 		System.out.println("------------------------------");
@@ -223,6 +261,7 @@ public class Conference{
 				if(userInput.equals("1")){
 					organize();
 					organized = true;
+					System.out.println("Press enter to continue");
 				}
 				else if(userInput.equals("2")){
 					addManually();
@@ -231,7 +270,7 @@ public class Conference{
 					break;
 				}
 				else{
-					System.out.println("Invalid Input\n");
+					System.out.println("Invalid Input. Press enter to continue\n");
 				}
 			}
 			else {
@@ -242,13 +281,13 @@ public class Conference{
 				String userInput = s2.nextLine();
 				
 				if(userInput.equals("1")){
-					String result  = "";
+					String result  = "Table Assignment (-1 indicates an empty spot)";
 					
 					for(int i = 0; i<nTables; i++){//loop through the tables array
-						result += "Table " + (i+1)+":";
+						result += "Table " + (i+1)+": ";
 						for (int n = 0; n<ppl_per_table;n++){
 							
-							result += (tables[i][n]).getID() + " ";//use getCompany() on each item in the tables array
+							result += (tables[i][n]).getID() + " ";//use getCompanyID() on each item in the tables array
 						}
 						result += "\n";//spacing
 					}
@@ -258,20 +297,83 @@ public class Conference{
 					System.out.println(result);
 				}
 				else if(userInput.equals("2")){
+					Scanner s5 = new Scanner(System.in);
 					int targetTable = -1;
+					ArrayList<Attendee> tableRoster = new ArrayList<Attendee>();
 					
-					while(targetTable <0 || targetTable<16){
-						System.out.println("Which company's rosters would you like to print?");
+					int numAttendees = attendeeArray.length;
+					while(targetTable <1 || targetTable>nTables){
+						System.out.println("Which table's rosters would you like to print? Must be 1-"+nTables);
+						targetTable=s5.nextInt();
 					}
+					
+					
+					for(int attendee = 0; attendee < numAttendees; attendee++){
+						if(attendeeArray[attendee]==null){
+								continue; //skip extra spaces in attendee array
+						}
+						if(attendeeArray[attendee].getTable() == targetTable){
+							tableRoster.add(attendeeArray[attendee]);
+						}
+					}
+					
+					int seatsFilled = tableRoster.size();
+					for(int i = 0; i<seatsFilled; i++){
+						System.out.println((i+1)+". "+tableRoster.get(i).getName()+ ", "+ tableRoster.get(i).getCompanyName());
+					}
+					System.out.println("Press enter to return to menu");
+					
+					
 				}
 				else if(userInput.equals("3")){
-					System.out.println("In Progress!");
+					Scanner s6 = new Scanner(System.in);
+					System.out.println("Company IDs:");
+					printCompanies();
+					int compNum=-1;
+					boolean compNumValid=false;
+					while(!compNumValid){
+						System.out.println("Which company's roster would you like to print (must be 1-16; see above): ");
+						compNum = Integer.parseInt(s6.nextLine());//parse the users input for a company number int
+						int length = companies.size();
+						for(int i = 0; i <length ; i++){
+							if(companies.get(i).getID()==compNum){
+								compNumValid = true;
+								break;
+							}
+						}
+					}
+					
+					
+					
+					System.out.println("Company Roster with Table Numbers");
+					ArrayList<Attendee> companyRoster = new ArrayList<Attendee>();
+					
+					int numAttendees = attendeeArray.length;
+					
+					for(int attendee = 0; attendee < numAttendees; attendee++){
+						if(attendeeArray[attendee]==null){
+								continue; //skip extra spaces in attendee array
+						}
+						if(attendeeArray[attendee].getCompanyID() == compNum){
+							companyRoster.add(attendeeArray[attendee]);
+						}
+					}
+					
+					
+					int rosterSize = companyRoster.size();
+					for(int i = 0; i<rosterSize; i++){
+						System.out.println((i+1)+". "+companyRoster.get(i).getName()+ ", "+ companyRoster.get(i).getTable());
+					}
+					
+					System.out.println("Press enter to return to menu");
+					
 				}
 				else if(userInput.equals("q")){
 					break;
 				}
 				else{
 					System.out.println("Invalid Input\n");
+					continue;
 				}
 			}
 		}

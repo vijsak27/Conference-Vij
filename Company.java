@@ -15,5 +15,4 @@ public class Company{
 		return ID;
 	}
 	
-	
 }
