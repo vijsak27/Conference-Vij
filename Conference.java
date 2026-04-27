@@ -8,17 +8,19 @@ public class Conference{
     private ArrayList<Company> companies = new ArrayList<Company>();
     private int numCompanies;
     private Attendee[][] tables;
+    private int maxPplPerCompany;
     
     /* take in the number of people per table and the number of tables into the Conference object
     Also define the attendeeArray with the now given numTable and pplPer Table (include 1.5x multiplier to add all resgistered guests
     an ensure they all fit)
     */
-    public Conference(int pplPerTable, int numTables){//constructor
+    public Conference(int pplPerTable, int numTables, int maxPerCompany){//constructor
         ppl_per_table=pplPerTable;
         nTables = numTables;
         attendeeArray = new Attendee[(int)((ppl_per_table*nTables)*1.5)];//multiplying by 1.5 as suggested by Mr. Twyford to account for extra attendees
         tables = new Attendee[nTables][ppl_per_table];
         numCompanies = companies.size();
+        maxPplPerCompany =maxPerCompany;
     }
     
 
@@ -84,6 +86,37 @@ public class Conference{
 		System.out.println("\n\n");
 		
 	}
+	
+	public void cleanUpTableRosters(){
+		int length = companies.size();
+		ArrayList<Attendee> extrasForCompany = new ArrayList<Attendee>();
+		int count;
+		for(int i = 0; i<length; i++){
+			count = 0;
+			for(int table = 0; table<nTables; table++){
+				for(int seat = 0; seat<ppl_per_table; seat++){
+					if(companies.get(i).getID()==tables[table][seat].getCompanyID()){
+						count++;
+						if(count>maxPplPerCompany){
+							extrasForCompany.add(tables[table][seat]);
+							tables[table][seat].setTable(-1);//set to negative 1 to ensure that it shows up as no assign attendee at that seat
+							
+							tables[table][seat] = new Attendee("empty","empty", -1,-1);//fill with default empty values
+						}
+					}
+				}
+			}
+		}
+		int numExtras = extrasForCompany.size();
+		if(numExtras>0){
+			System.out.println("The following individuals were removed since they were over the max\nnumber of attendees per company of ("+maxPplPerCompany+")");
+			for(int i = 0; i<numExtras; i++){
+				System.out.println((i+1)+". "+extrasForCompany.get(i).getName()+", "+extrasForCompany.get(i).getCompany().getID());
+				extrasForCompany.get(i).makeUnassignedsSinceExtraForCompany();
+			}
+		}
+		
+	}
 
     /*
     this function allows the user to manually add any addtional guests to the registration list
@@ -104,7 +137,7 @@ public class Conference{
         }
         int maxOccupancy =nTables*ppl_per_table;//calculated maxOccupancy based on number of total seats
         if (attendeeCount>=maxOccupancy){// dont add more than maxOccupancy
-            System.out.println("Max Occupancy ("+maxOccupancy+") Reached\n");
+            System.out.println("Max Occupancy ("+maxOccupancy+") Reached. Press enter to continue\n");
             return false;//return that the attendee was not added - used in Main.java for loop logic
         }
         else{
@@ -156,7 +189,7 @@ public class Conference{
     /*
     organize the tables array with the attendees. First check if a table already has the company of the attendee
     if alrHasCompany is false, seat the attendee at the next available seat
-    after it has organized the tables it will return the tables array
+    after it has organized the tables it will return the ta){bles array
     */
     public Attendee[][] organize(){
         int len = attendeeArray.length;
@@ -188,6 +221,7 @@ public class Conference{
                 }                
             }
 		}	
+		cleanUpTableRosters();
         return tables;
     }
 
@@ -281,7 +315,7 @@ public class Conference{
 				String userInput = s2.nextLine();
 				
 				if(userInput.equals("1")){
-					String result  = "Table Assignment (-1 indicates an empty spot)";
+					String result  = "Table Assignments (-1 indicates an empty spot)\n";
 					
 					for(int i = 0; i<nTables; i++){//loop through the tables array
 						result += "Table " + (i+1)+": ";
@@ -310,9 +344,9 @@ public class Conference{
 					
 					for(int attendee = 0; attendee < numAttendees; attendee++){
 						if(attendeeArray[attendee]==null){
-								continue; //skip extra spaces in attendee array
+							continue; //skip extra spaces in attendee array
 						}
-						if(attendeeArray[attendee].getTable() == targetTable){
+						if(attendeeArray[attendee].getTable() == (targetTable-1)){
 							tableRoster.add(attendeeArray[attendee]);
 						}
 					}
@@ -350,16 +384,14 @@ public class Conference{
 					
 					int numAttendees = attendeeArray.length;
 					
-					for(int attendee = 0; attendee < numAttendees; attendee++){
-						if(attendeeArray[attendee]==null){
-								continue; //skip extra spaces in attendee array
+					for(int table = 0; table<nTables; table++){
+						for(int seat = 0; seat<ppl_per_table; seat++){
+							if(tables[table][seat].getCompanyID() == compNum){
+								companyRoster.add(tables[table][seat]);
+							}
 						}
-						if(attendeeArray[attendee].getCompanyID() == compNum){
-							companyRoster.add(attendeeArray[attendee]);
-						}
+					
 					}
-					
-					
 					int rosterSize = companyRoster.size();
 					for(int i = 0; i<rosterSize; i++){
 						System.out.println((i+1)+". "+companyRoster.get(i).getName()+ ", "+ companyRoster.get(i).getTable());
@@ -372,7 +404,7 @@ public class Conference{
 					break;
 				}
 				else{
-					System.out.println("Invalid Input\n");
+					System.out.println("Invalid Input. Press enter to continue\n");
 					continue;
 				}
 			}

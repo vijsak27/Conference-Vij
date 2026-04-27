@@ -18,11 +18,17 @@ public class Attendee{
         companyID = company_number;// and company number
         id = ID;
     }
+    public void makeUnassignedsSinceExtraForCompany(){
+		name = name + "Not Seated (Over max attendee per company limit)";
+	}
     public String getName(){//method to access attendee name
         return name;
     }
     public int getCompanyID(){//method to access company number for attendee
         return companyID;
+    }
+    public Company getCompany(){//method to access company number for attendee
+        return c;
     }
     public String getCompanyName(){
 		return c.getName();
@@ -38,5 +44,8 @@ public class Attendee{
 	}
 	public void setCompany(Company comp){
 		c = comp;
+	}
+	public void setCompanyID(int comp){
+		companyID = comp;
 	}
 }

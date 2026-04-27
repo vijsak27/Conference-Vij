@@ -17,8 +17,11 @@ public class Main{
 		s.nextLine();
 		System.out.println("How many tables are available?: ");
 		int numTables = s.nextInt();
+		s.nextLine();
+		System.out.println("How many indivduals per company can attend: ");
+		int maxIndividualPerCompany = s.nextInt();
 		
-        Conference c1 = new Conference(pplPerTable,numTables);//define new conference
+        Conference c1 = new Conference(pplPerTable,numTables, maxIndividualPerCompany);//define new conference
         c1.readFile();
         c1.emptyFill();
         c1.menu();
