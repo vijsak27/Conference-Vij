@@ -23,7 +23,9 @@ public class Attendee{
         name = first_name+" "+last_name;//assign name
         companyID = company_number;// and company number
         id = ID;
-        table = -1; //start unassigned (-1 means unassigned)
+        table = -1; //start unassigned (-1 means unassigned) - this was a challenge area (tracking the assignment of the attendees)
+        //default assignment to zero allowed the organize method to assign table to the objects as well while preserving
+        // any registrants that were unassigned
     }
     
     /*
