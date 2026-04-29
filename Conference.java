@@ -1,3 +1,20 @@
+/*
+ * Conference.java
+ * Author: Sakshum Vij
+ * Date: 4/28/26
+ * Program Name: Conference Planner
+ * Purpose: This class forms the foundational functionality of the conference planner program.
+ * The Conference object planner has many instance variables to account for the variables necessary
+ * to organize the tables in accordance with the rules provided (below).
+ */
+
+/*
+Rules/goals for program:
+
+
+
+ */
+
 //Conference.java
 import java.util.*;
 import java.io.*;
@@ -74,31 +91,45 @@ public class Conference{
     }
     
 
-
+	/*
+	 The printComapnies() method simply loops through the companies ArrayList and prints
+	 out every company as well as its ID. This is used to provide the user information
+	 about which company corresponds to which ID when searching for a specific company's roster
+	 */
 	public void printCompanies(){
 		
 		System.out.println("Companies Attending Conference with IDs:");
 		int length = companies.size();
 		for(int i = 0; i<length; i++){
-			System.out.println(companies.get(i).getName()+", "+companies.get(i).getID());
+			System.out.println(companies.get(i).getName()+", "+companies.get(i).getID());//print out name and ID of companies
 		}
 		
-		System.out.println("\n\n");
+		System.out.println("\n");
 		
 	}
 	
+	/*
+	 The cleanUpTableRosters() method ensure that more than maxPplPerCompany attendees have not been
+	 assigned seats at tables at the conference. It does so by counting the number of attendees from
+	 a company in the tables array and then ensure that the number is less than maxPplPerCompany.
+	 If a company has excess attendees, those attendess are removed and assigned to table -1. There
+	 spot in the tables array is replaced with and empty filler attendee object.
+	 */
+	
 	public void cleanUpTableRosters(){
 		int length = companies.size();
-		ArrayList<Attendee> extrasForCompany = new ArrayList<Attendee>();
-		int count;
+		ArrayList<Attendee> extrasForCompany = new ArrayList<Attendee>();//keep track of the extra attendees from the companies
+		int count;//counter variable for number of attendees from company
 		for(int i = 0; i<length; i++){
 			count = 0;
 			for(int table = 0; table<nTables; table++){
 				for(int seat = 0; seat<ppl_per_table; seat++){
-					if(companies.get(i).getID()==tables[table][seat].getCompanyID()){
-						count++;
-						if(count>maxPplPerCompany){
-							extrasForCompany.add(tables[table][seat]);
+					if(companies.get(i).getID()==tables[table][seat].getCompanyID()){//if company of current attendee corresponds with the company currently being checked
+						count++;//increment the counter variable
+						if(count>maxPplPerCompany){// if above the maximum number of attendees allowed
+							
+							extrasForCompany.add(tables[table][seat]);//add the extraForComapny arraylist
+							
 							tables[table][seat].setTable(-1);//set to negative 1 to ensure that it shows up as no assign attendee at that seat
 							
 							tables[table][seat] = new Attendee("empty","empty", -1,-1);//fill with default empty values
@@ -109,10 +140,11 @@ public class Conference{
 		}
 		int numExtras = extrasForCompany.size();
 		if(numExtras>0){
+			//inform user that the following attendees were removed from the tables
 			System.out.println("The following individuals were removed since they were over the max\nnumber of attendees per company of ("+maxPplPerCompany+")");
 			for(int i = 0; i<numExtras; i++){
 				System.out.println((i+1)+". "+extrasForCompany.get(i).getName()+", "+extrasForCompany.get(i).getCompany().getName());
-				extrasForCompany.get(i).makeUnassignedsSinceExtraForCompany();
+				extrasForCompany.get(i).makeUnassignedsSinceExtraForCompany();//this function sets the table of the attendee to -1 and adds a statement to their name indivicating unassigned status
 			}
 		}
 		
@@ -222,25 +254,25 @@ public class Conference{
                 }                
             }
 		}	
-		cleanUpTableRosters();
+		cleanUpTableRosters();//ensure that the number of attendees per company is appropriate
         return tables;
     }
 
-
-	public ArrayList<Attendee> howManyUnseated(){
+	/*
+	 The whoUnseated() method stores the unseated attendees in an ArrayList that is later accessed 
+	 in the menu and printed out to the user to provide information about who is not assigned to
+	 a seat currently. It loops throuhg the attendee array and identifies if the indivdual is seated
+	 */
+	public ArrayList<Attendee> whoUnseated(){
 		int numAttendees = attendeeArray.length;
 		ArrayList<Attendee> unseatedAttendees = new ArrayList<Attendee>();
 		
-		for(int attendee = 0; attendee<numAttendees; attendee++){
-			boolean seated = false;
-			for(int table = 0; table<nTables; table++){
-				for(int seat = 0; seat<ppl_per_table; seat++){
-					if(tables[table][seat].getID()==(attendeeArray[attendee].getID())){
-						seated = true;
-					}
-				}
+		for(int attendee = 0; attendee<numAttendees; attendee++){//loop through all resgistered attendees
+			boolean seated = true;//everyone starts off seated
+			if(attendeeArray[attendee]!=null && attendeeArray[attendee].getTable()==-1){//check if not assigned table (set in organize method)
+				seated = false;//assigned seated as false
 			}
-			if(!seated){
+			if(!seated){//if not seated add to the arraylist that will be returned
 				unseatedAttendees.add(attendeeArray[attendee]);
 			}
 		}
@@ -248,16 +280,24 @@ public class Conference{
 		return unseatedAttendees;
 	}
 
+
+
+	/*
+	 The assignAttendeeCompanyObjects() method connects the company numbers from the raw txt file
+	 into company objects that are stored with each attendee. This allows for greater functionality
+	 later on in the menu and printing capabilities of the program
+	 
+	 */
 	public void assignAttendeeCompanyObjects(){
 		int length = attendeeArray.length;
 		for(int i = 0; i<length; i++){
 			if(attendeeArray[i]==null){
 					continue; //skip extra spaces in attendee array
 			}
-			for(int n = 0; n<companies.size(); n++){
-				if(attendeeArray[i].getCompanyID()==companies.get(n).getID()){
-					attendeeArray[i].setCompany(companies.get(n));
-					break;
+			for(int n = 0; n<companies.size(); n++){//loop throuhg companies
+				if(attendeeArray[i].getCompanyID()==companies.get(n).getID()){//check if the company ID corresopnds with attendee company ID
+					attendeeArray[i].setCompany(companies.get(n));//use setter method to assigne company object from company arraylist
+					break;//stop searching (efficiency)
 				}
 			}
 		}
@@ -279,45 +319,59 @@ public class Conference{
         return result;//return array of company numbers
     }
     
+    
+    /*
+    The menu() function is the method that combines the functinoality of
+    conference planner into one cohesive user-facing UI. The Menu is designed in two parts
+    becuase prior to organizing the tables some functions are not possible.
+    At the start the user has the opton to add attendees or organize. After they organize the tables
+    then the user is given a second menu with more functions in regards to the tables
+    and organization of the attendees
+    */
     public void menu(){
-		assignAttendeeCompanyObjects();
-		boolean organized = false;
+		assignAttendeeCompanyObjects();//assign objects at start to allow for functionality throuhgout the program
+		boolean organized = false;//this differentiates which menu the user will receive
 		System.out.println("Launching Conference Planner...");
 		System.out.println("------------------------------");
-		System.out.println("Enter 'q' to quit or press enter to continue");
+		System.out.println("Enter 'q' to quit or press enter to continue");// q is quit command throughout
 		Scanner s2 = new Scanner(System.in);
 		while(!s2.nextLine().equals("q")){
 			System.out.println("\nOptions:");
 			if(!organized){
+				//present options for non-organized tables
 				System.out.println("1. Organize Attendees");
 				System.out.println("2. Add Attendee Manually");
 				System.out.println("Enter 1, 2, or q (quit)");
 				String userInput = s2.nextLine();
 				if(userInput.equals("1")){
-					organize();
-					organized = true;
+					organize();//organize the tables
+					organized = true;//set organized to true to allow for second menu to pop up
 					System.out.println("Press enter to continue");
 				}
 				else if(userInput.equals("2")){
 					addManually();
-					assignAttendeeCompanyObjects();
+					assignAttendeeCompanyObjects();//reassign objects (specifcally for the new attendee added)
 				}
 				else if(userInput.equals("q")){
-					break;
+					break;//quit command
 				}
 				else{
-					System.out.println("Invalid Input. Press enter to continue\n");
+					System.out.println("Invalid Input. Press enter to continue\n");//if invalid item entered
 				}
 			}
 			else {
+				//Menu 2 - tables have been organized
 				System.out.println("1. Print Tables");
 				System.out.println("2. Print Specific Table");
 				System.out.println("3. Print Company Rosters");
 				System.out.println("4. Locate Specfic Individual");
-				System.out.println("Enter 1, 2, 3, 4, or q (quit)");
+				System.out.println("5. View Unseated Registrants");
+				System.out.println("Enter 1, 2, 3, 4, 5, or q (quit)");
 				String userInput = s2.nextLine();
 				
 				if(userInput.equals("1")){
+					//print out tables
+					
 					String result  = "Table Assignments (-1 indicates an empty spot)\n";
 					
 					for(int i = 0; i<nTables; i++){//loop through the tables array
@@ -328,24 +382,27 @@ public class Conference{
 						}
 						result += "\n";//spacing
 					}
+					result += "Number of unseated registrants: "+whoUnseated().size();//use whoUnseated method to calculate the number of unseated indivduals
 					
 					
 					result+="\nPress enter to continue";
 					System.out.println(result);
 				}
 				else if(userInput.equals("2")){
-					Scanner s5 = new Scanner(System.in);
-					int targetTable = -1;
-					ArrayList<Attendee> tableRoster = new ArrayList<Attendee>();
+					//print out specific table roster
 					
-					while(targetTable <1 || targetTable>nTables){
+					Scanner s5 = new Scanner(System.in);
+					int targetTable = -1;//default to -1
+					ArrayList<Attendee> tableRoster = new ArrayList<Attendee>();//create a roster ArrayList to be filled up with indivduals at target table
+					
+					while(targetTable <1 || targetTable>nTables){//ensure valid table is entered
 						System.out.println("Which table's rosters would you like to print? Must be 1-"+nTables);
 						targetTable=s5.nextInt();
 					}
 					
 					for(int seat = 0; seat<ppl_per_table; seat++){
 						if(tables[targetTable-1][seat].getID()!=-1){
-							System.out.println((seat+1)+". "+tables[targetTable-1][seat].getName()+", "+tables[targetTable-1][seat].getCompanyName());
+							System.out.println((seat+1)+". "+tables[targetTable-1][seat].getName()+", "+tables[targetTable-1][seat].getCompanyName());//pirnt out name and company
 						}
 					}
 					
@@ -354,19 +411,24 @@ public class Conference{
 					
 				}
 				else if(userInput.equals("3")){
+					//print out one company's roster
 					Scanner s6 = new Scanner(System.in);
 					System.out.println("Company IDs:");
-					printCompanies();
-					int compNum=-1;
+					printCompanies();//use printCompanies() to display the companies and their corresponding IDs to user
+					int compNum=-1;//deafult to -1
+					
+					//ensure valid company number is entered
 					boolean compNumValid=false;
 					while(!compNumValid){
-						System.out.println("Which company's roster would you like to print (must be 1-16; see above): ");
-						compNum = Integer.parseInt(s6.nextLine());//parse the users input for a company number int
+						
 						int length = companies.size();
+						System.out.println("Which company's roster would you like to print (must be 1-"+length+"; see above): ");
+						compNum = Integer.parseInt(s6.nextLine());//parse the users input for a company number int
+						
 						for(int i = 0; i <length ; i++){
 							if(companies.get(i).getID()==compNum){
-								compNumValid = true;
-								break;
+								compNumValid = true;//set to true is the compNum exists in the companies ArrayList
+								break;//stop searching (efficiency)
 							}
 						}
 					}
@@ -374,60 +436,76 @@ public class Conference{
 					
 					
 					System.out.println("Company Roster with Table Numbers");
-					ArrayList<Attendee> companyRoster = new ArrayList<Attendee>();
+					ArrayList<Attendee> companyRoster = new ArrayList<Attendee>();//create ArrayList with the attendees for that company
 					
 					int numAttendees = attendeeArray.length;
 					
 					for(int table = 0; table<nTables; table++){
 						for(int seat = 0; seat<ppl_per_table; seat++){
 							if(tables[table][seat].getCompanyID() == compNum){
-								companyRoster.add(tables[table][seat]);
+								companyRoster.add(tables[table][seat]);//add attendee if they exist to target company
 							}
 						}
 					
 					}
 					int rosterSize = companyRoster.size();
 					for(int i = 0; i<rosterSize; i++){
-						System.out.println((i+1)+". "+companyRoster.get(i).getName()+ ", "+ companyRoster.get(i).getTable());
+						System.out.println((i+1)+". "+companyRoster.get(i).getName()+ ", "+ companyRoster.get(i).getTable());//print out name and table
 					}
 					
 					System.out.println("Press enter to return to menu");
 					
 				}
 				else if(userInput.equals("4")){
+					//search functionality (by ID)
+					
 					Scanner s7 = new Scanner(System.in);
 					System.out.println("Enter Attendee ID (if you do not know Attendee ID enter 0)");
 					int response = s7.nextInt();
-					if(response==0){
+					if(response==0){// if the user enters 0, the program will give them the full list of attendees and IDs
 						System.out.println("Full List of Attendees with IDs");
 						int numAttendees = attendeeArray.length;
 						for(int attendee = 0; attendee<numAttendees; attendee++){
 							if(attendeeArray[attendee]==null){
-								continue;
+								continue;// skip blank spots in attendeeArray
 							}
 							else{
-								System.out.println("Attendee: "+attendeeArray[attendee].getName()+", ID: "+attendeeArray[attendee].getID());
+								System.out.println("Attendee: "+attendeeArray[attendee].getName()+", ID: "+attendeeArray[attendee].getID());//print out name and ID
 							}
 						}
-						System.out.println("Identify the ID of your desired attendee and press enter to return to menu");
+						System.out.println("Identify the ID of your desired attendee and press enter to return to menu");//instructions to user
 					}
 					else if (response>0 && response<attendeeArray.length && attendeeArray[response-1]!=null){
-						if(attendeeArray[response-1].getTable()==-1){
-							System.out.println("This attendee is not seated/was removed since the limit of attendees for their company was hit or seating was not possible");
+						if(attendeeArray[response-1].getTable()==-1){//-1 means unseated/unassigned
+							System.out.println("This attendee is not seated/was removed since the limit of attendees for their company was hit or seating was not possible");//notify user that user was not assigned
 						}
 						else{
+							//print out name, company, table, and seat for attendee
 							System.out.println("Attendee: "+attendeeArray[response-1].getName()+", Company: "+attendeeArray[response-1].getCompanyName()+", Table: "+(attendeeArray[response-1].getTable()+1)+", Seat: "+(attendeeArray[response-1].getSeat()+1));
 							System.out.println("Press enter to return to menu");
 						}
 					}
 					else{
+						//tell user if invalid ID entered
 						System.out.println("Invalid ID. No attendee has this ID. Press enter to return to menu");
 					}
 				}
+				else if (userInput.equals("5")){
+					//show unseated registrants
+					System.out.println("Unseated Registrants");
+					ArrayList<Attendee> unseated = whoUnseated();//use whoUnstead() method to find unseated registrants
+					int length = unseated.size(); 
+					for(int i = 0; i < length; i++){
+						//print out name, company, and ID of unseated registrants
+						System.out.println((i+1)+". "+unseated.get(i).getName()+ ", Company: "+unseated.get(i).getCompanyName()+", ID: "+unseated.get(i).getID());
+					}
+					System.out.println("Press enter to return to menu");
+				}
 				else if(userInput.equals("q")){
-					break;
+					break;//quit
 				}
 				else{
+					//notify user if what they entered was not an aviable option in Menu 2
 					System.out.println("Invalid Input. Press enter to continue\n");
 					continue;
 				}

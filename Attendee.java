@@ -1,27 +1,38 @@
 
-//Attendee.java
-/*
-the attendee class will layout the basic structure for an attendee of the conference
-an attendee will include attributes like first name, last name, and company number
-these attributes will be used to organize the array
-create get methods to be able to access those variables and values
+/*Attendee.java
+ * Author: Sakshum Vij
+ * Date: 4/28/26
+ * Program: Conference Planner
+ * Purpose: The attendee class lays out the basic structure for an attendee of the conference
+an attendee will include attributes like name, company number, id, table, seat, Company object.
+These attributes will be used to organize the array.
 */
+
 import java.util.Scanner;
 public class Attendee{
+	//instance variables
 	private String name;
     private int companyID;
     private int id;
     private int table;
     private Company c;
     private int seat;
-	public Attendee (String first_name, String last_name, int company_number, int ID){//contructor
+    
+    //constructor
+	public Attendee (String first_name, String last_name, int company_number, int ID){
         name = first_name+" "+last_name;//assign name
         companyID = company_number;// and company number
         id = ID;
-        table = -1; //start unassigned
+        table = -1; //start unassigned (-1 means unassigned)
     }
+    
+    /*
+		The makeUnassignedsSinceExtraForCompany() method is accessed in the cleanUpTableRosters() method
+		of the conference class. This method sets the attendee objects table to -1, signalling unassignment
+		. A tag is also added on to the attendee's name to indicate that they are unassigned
+     */
     public void makeUnassignedsSinceExtraForCompany(){
-		name = name + " - Not Seated (Over max attendee per company limit)";
+		name = name + " - Not Seated (Over Company Limit)";
 		table = -1;
 	}
     public String getName(){//method to access attendee name
@@ -33,28 +44,25 @@ public class Attendee{
     public Company getCompany(){//method to access company number for attendee
         return c;
     }
-    public String getCompanyName(){
+    public String getCompanyName(){//retrieve company name of attendee
 		return c.getName();
 	}
     public int getID(){
 		return id;//method to access id number for attendee
 	}
-	public void setTable(int t){
+	public void setTable(int t){//set table for attendee
 		table = t;
 	}
-	public int getTable(){
+	public int getTable(){//retrieve table of attendee
 		return table;
 	}
-	public void setCompany(Company comp){
+	public void setCompany(Company comp){//assign the attendee to a company object
 		c = comp;
 	}
-	public void setCompanyID(int comp){
-		companyID = comp;
-	}
-	public void setSeat(int s){
+	public void setSeat(int s){//set the seat of the attendee
 		seat = s;
 	}
-	public int getSeat(){
+	public int getSeat(){//retrieve the attendee's seat at the table
 		return seat;
 	}
 }
