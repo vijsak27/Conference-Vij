@@ -13,13 +13,16 @@ public class Attendee{
     private int id;
     private int table;
     private Company c;
+    private int seat;
 	public Attendee (String first_name, String last_name, int company_number, int ID){//contructor
         name = first_name+" "+last_name;//assign name
         companyID = company_number;// and company number
         id = ID;
+        table = -1; //start unassigned
     }
     public void makeUnassignedsSinceExtraForCompany(){
-		name = name + "Not Seated (Over max attendee per company limit)";
+		name = name + " - Not Seated (Over max attendee per company limit)";
+		table = -1;
 	}
     public String getName(){//method to access attendee name
         return name;
@@ -47,5 +50,11 @@ public class Attendee{
 	}
 	public void setCompanyID(int comp){
 		companyID = comp;
+	}
+	public void setSeat(int s){
+		seat = s;
+	}
+	public int getSeat(){
+		return seat;
 	}
 }

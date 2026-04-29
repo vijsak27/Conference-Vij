@@ -111,7 +111,7 @@ public class Conference{
 		if(numExtras>0){
 			System.out.println("The following individuals were removed since they were over the max\nnumber of attendees per company of ("+maxPplPerCompany+")");
 			for(int i = 0; i<numExtras; i++){
-				System.out.println((i+1)+". "+extrasForCompany.get(i).getName()+", "+extrasForCompany.get(i).getCompany().getID());
+				System.out.println((i+1)+". "+extrasForCompany.get(i).getName()+", "+extrasForCompany.get(i).getCompany().getName());
 				extrasForCompany.get(i).makeUnassignedsSinceExtraForCompany();
 			}
 		}
@@ -210,6 +210,7 @@ public class Conference{
                     if(!alrHasCompany){//if the table doesn't already have the company
                         if(tables[n][c].getCompanyID()==-1){// and if the seat is empty
                             tables[n][c]=attendeeArray[i];//place attendee in that seat
+                            tables[n][c].setSeat(c);
                             seated = true;//make seated true 
                             attendeeArray[i].setTable(n);
                             break; // break out of the loop so it doesnt keep on placing the same attendee - reference: https://www.w3schools.com/java/java_break.asp
@@ -299,6 +300,7 @@ public class Conference{
 				}
 				else if(userInput.equals("2")){
 					addManually();
+					assignAttendeeCompanyObjects();
 				}
 				else if(userInput.equals("q")){
 					break;
@@ -311,7 +313,8 @@ public class Conference{
 				System.out.println("1. Print Tables");
 				System.out.println("2. Print Specific Table");
 				System.out.println("3. Print Company Rosters");
-				System.out.println("Enter 1, 2, 3, or q (quit)");
+				System.out.println("4. Locate Specfic Individual");
+				System.out.println("Enter 1, 2, 3, 4, or q (quit)");
 				String userInput = s2.nextLine();
 				
 				if(userInput.equals("1")){
@@ -335,28 +338,19 @@ public class Conference{
 					int targetTable = -1;
 					ArrayList<Attendee> tableRoster = new ArrayList<Attendee>();
 					
-					int numAttendees = attendeeArray.length;
 					while(targetTable <1 || targetTable>nTables){
 						System.out.println("Which table's rosters would you like to print? Must be 1-"+nTables);
 						targetTable=s5.nextInt();
 					}
 					
-					
-					for(int attendee = 0; attendee < numAttendees; attendee++){
-						if(attendeeArray[attendee]==null){
-							continue; //skip extra spaces in attendee array
-						}
-						if(attendeeArray[attendee].getTable() == (targetTable-1)){
-							tableRoster.add(attendeeArray[attendee]);
+					for(int seat = 0; seat<ppl_per_table; seat++){
+						if(tables[targetTable-1][seat].getID()!=-1){
+							System.out.println((seat+1)+". "+tables[targetTable-1][seat].getName()+", "+tables[targetTable-1][seat].getCompanyName());
 						}
 					}
 					
-					int seatsFilled = tableRoster.size();
-					for(int i = 0; i<seatsFilled; i++){
-						System.out.println((i+1)+". "+tableRoster.get(i).getName()+ ", "+ tableRoster.get(i).getCompanyName());
-					}
+					
 					System.out.println("Press enter to return to menu");
-					
 					
 				}
 				else if(userInput.equals("3")){
@@ -399,6 +393,36 @@ public class Conference{
 					
 					System.out.println("Press enter to return to menu");
 					
+				}
+				else if(userInput.equals("4")){
+					Scanner s7 = new Scanner(System.in);
+					System.out.println("Enter Attendee ID (if you do not know Attendee ID enter 0)");
+					int response = s7.nextInt();
+					if(response==0){
+						System.out.println("Full List of Attendees with IDs");
+						int numAttendees = attendeeArray.length;
+						for(int attendee = 0; attendee<numAttendees; attendee++){
+							if(attendeeArray[attendee]==null){
+								continue;
+							}
+							else{
+								System.out.println("Attendee: "+attendeeArray[attendee].getName()+", ID: "+attendeeArray[attendee].getID());
+							}
+						}
+						System.out.println("Identify the ID of your desired attendee and press enter to return to menu");
+					}
+					else if (response>0 && response<attendeeArray.length && attendeeArray[response-1]!=null){
+						if(attendeeArray[response-1].getTable()==-1){
+							System.out.println("This attendee is not seated/was removed since the limit of attendees for their company was hit or seating was not possible");
+						}
+						else{
+							System.out.println("Attendee: "+attendeeArray[response-1].getName()+", Company: "+attendeeArray[response-1].getCompanyName()+", Table: "+(attendeeArray[response-1].getTable()+1)+", Seat: "+(attendeeArray[response-1].getSeat()+1));
+							System.out.println("Press enter to return to menu");
+						}
+					}
+					else{
+						System.out.println("Invalid ID. No attendee has this ID. Press enter to return to menu");
+					}
 				}
 				else if(userInput.equals("q")){
 					break;
