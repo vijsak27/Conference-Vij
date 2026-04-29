@@ -20,3 +20,13 @@ Goals for functionality (from Assignment Description Document):
 - Print 'rosters' by table
 - Print rosters by company
 - Add getter functionality to 'find' a person and report what table they are at
+
+
+Approach:
+To approach this problem, I implemented an algorithm that first goes through and assigns all attendees that can be assigned
+in the limits of the constraints (one attendee per company at a table, table size, number of tables, etc.). Then the program checks to see if the maximum attendees per company rules has been broken among the attendees and reflects that in the finalized seating chart. Then, the user has the option to view the tables, print out a specifc table's roster, print out a specific company's roster, search for a specific attendee, or view unassigned registrants.
+
+Limitations:
+The main limitation to this project origniate from the given constraint (which are inputted by the user). Depending on the number of tables,
+maximum number of individuals or one company per table, and seats per table, the feasbility of the conference is impacted and the
+number of unassigned registrants varies accordingly.
